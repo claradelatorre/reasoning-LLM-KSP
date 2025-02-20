@@ -1,0 +1,649 @@
+########################
+# Prompts for PE problem
+########################
+
+# System prompt used by fine_tuning_agent_history.py
+#
+PE_SYSTEM_PROMPT="You operate as an autonomous agent controlling a pursuit spacecraft. Your goal is to apply
+throttles to capture the evader given the positions and velocities of the pursuer and evader in celestial body
+reference frame and the direction of evader's velocity relative to pursuer or prograde. Throttles must be
+in your vessel reference frame wherein the x axes points to the right, the y axes points forward towards the target and
+the z axes points upwards. The maximum throttle is 1. As a hint you should accelerate when you are far from the evader and decelerate when you are close.
+Show reasoning."
+
+PE_SYSTEM_PROMPT="You operate as an autonomous agent controlling a pursuit spacecraft. Your goal is to apply throttles
+to capture the evader given the positions and velocities of the pursuer and evader and considering that maximum throttle is 1.
+As a hint you should accelerate in the direction of the relative position to the evader. Do not show neither reasoning
+nor calculations. After reasoning call the perform_action function."
+
+# Original system prompt w/o prograde
+#
+PE_SYSTEM_PROMPT_orig="You operate as an autonomous agent controlling a pursuit spacecraft. Your goal is to apply throttles
+to capture the evader given the positions and velocities of the pursuer and evader and considering that maximum throttle is 1.
+As a hint you should accelerate in the direction of the relative position to the evader. Do not show neither reasoning
+nor calculations. After reasoning call the perform_action function."
+
+# System prompt with prograde information from NavBall
+#
+PE_SYSTEM_PROMPT_NAVBALL="You operate as an autonomous agent controlling a pursuit spacecraft. Your goal is to apply
+throttles to capture the evader given the positions and velocities of the pursuer and evader in celestial body
+reference frame and the direction of pursuer's velocity relative to evader or prograde. Throttles must be given
+in your vessel reference frame wherein the x axis points to the right, the y axis points towards the target and
+the z axis points upwards. The maximum throttle is 1. Reason step-by-step.
+After reasoning call the perform_action function."
+
+PE_SYSTEM_PROMPT="You operate as an autonomous agent controlling a pursuit spacecraft. Your goal is to apply
+throttles to capture the evader given the positions and velocities of the pursuer and evader in celestial body
+reference frame and the direction of pursuer's velocity relative to evader or prograde. Throttles must be given
+in your vessel reference frame wherein the x axis points to the right, the y axis points towards the target and
+the z axis points upwards. The maximum throttle is 1. Reason step-by-step."
+
+# No CoT
+#
+PE_CHAIN_OF_THOUGHT=""
+
+# This CoT prompt only works for gpt-3.5-turbo-0125
+#
+PE_CHAIN_OF_THOUGHT_NAVBALL_BASIC="USER:
+
+HUMAN: Given these observations {\"vehicle_mass\": 6685.0, \"vehicle_propellant\":
+1199.9976806640625, \"pursuer_pos_x\": 707714.9233405391, \"pursuer_pos_y\": -248272.96224747336, \"pursuer_pos_z\":
+-0.0005507227224457853, \"pursuer_vel_x\": 718.2699440171854, \"pursuer_vel_y\": 2047.6550602366287, \"pursuer_vel_z\":
+-8.727880298612636e-06, \"evader_pos_x\": 708577.1048547915, \"evader_pos_y\": -245801.0041154024, \"evader_pos_z\":
+-0.42948227236866804, \"evader_vel_x\": 711.1178432623287, \"evader_vel_y\": 2050.1498254215267, \"evader_vel_z\":
+0.0035782107557670575, \"prograde\": [0.6553969259127622, -0.3380649604462953, -0.6754013266366493]},
+what is the best throttle to capture evader?
+
+ASSISTANT: The x coordinate of prograde is positive, indicating that pursuer is moving to the right. The y coordinate
+of the prograde is negative, indicating that evader is approaching. The z coordinate of prograde is negative,
+indicating that pursuer is moving down. To capture the evader, we should move in the opposite direction in the x axis,
+towards the target in the y axis, and in the opposite direction in the z axis. This means we should apply
+throttles to move left, forward and up. Therefore we should call
+perform_action({\"ft\": \"forward\", \"rt\": \"left\", \"dt\": \"up\"}).
+
+
+Now answer the following question:\n"
+
+PE_CHAIN_OF_THOUGHT_NAVBALL_BASIC_ALT="
+
+HUMAN: Given these observations {\"vehicle_mass\": 6685.0, \"vehicle_propellant\":
+1199.9976806640625, \"pursuer_pos_x\": 707714.9233405391, \"pursuer_pos_y\": -248272.96224747336, \"pursuer_pos_z\":
+-0.0005507227224457853, \"pursuer_vel_x\": 718.2699440171854, \"pursuer_vel_y\": 2047.6550602366287, \"pursuer_vel_z\":
+-8.727880298612636e-06, \"evader_pos_x\": 708577.1048547915, \"evader_pos_y\": -245801.0041154024, \"evader_pos_z\":
+-0.42948227236866804, \"evader_vel_x\": 711.1178432623287, \"evader_vel_y\": 2050.1498254215267, \"evader_vel_z\":
+0.0035782107557670575, \"prograde\": [0.6553969259127622, -0.3380649604462953, -0.6754013266366493]},
+what is the best throttle to capture evader?
+
+ASSISTANT: prograde[0] is positive, indicating that pursuer is moving to the right. prograde[1] is negative,
+indicating that evader is approaching. prograde[2] is negative, indicating that pursuer is moving down.
+To capture the evader, we should move in the opposite direction in the first dimension, towards the target
+in the second dimension, and in the opposite direction in the third dimension.
+This means we should apply throttles to move left, forward and up. Therefore we should call
+perform_action({\"ft\": \"forward\", \"rt\": \"left\", \"dt\": \"up\"}).
+
+
+Now answer the following question:\n"
+
+PE_CHAIN_OF_THOUGHT="
+HUMAN: Given these observations {\"vehicle_mass\": 6685.0, \"vehicle_propellant\":
+1199.9976806640625, \"pursuer_pos_x\": 707714.9233405391, \"pursuer_pos_y\": -248272.96224747336, \"pursuer_pos_z\":
+-0.0005507227224457853, \"pursuer_vel_x\": 718.2699440171854, \"pursuer_vel_y\": 2047.6550602366287, \"pursuer_vel_z\":
+-8.727880298612636e-06, \"evader_pos_x\": 708577.1048547915, \"evader_pos_y\": -245801.0041154024, \"evader_pos_z\":
+-0.42948227236866804, \"evader_vel_x\": 711.1178432623287, \"evader_vel_y\": 2050.1498254215267, \"evader_vel_z\":
+0.0035782107557670575, \"prograde\": [0.6553969259127622, -0.3380649604462953, -0.6754013266366493]},
+what is the best throttle to capture evader?
+
+ASSISTANT: The x coordinate of prograde is positive, indicating that pursuer is moving to the right. The y coordinate
+of prograde is negative, indicating that evader is approaching. The z coordinate of prograde is negative,
+indicating that pursuer is moving down. To capture the evader we should counteract pursuer's motion, moving in the opposite
+direction in the x axis, towards the target in the y axis, and in the opposite direction in the z axis. This means
+we should apply throttles to move left, forward and up. Therefore we should call
+perform_action({\"ft\": \"forward\", \"rt\": \"left\", \"dt\": \"up\"}).
+
+Now answer the following question:\n"
+
+# This CoT prompt limits the approach speed to 20 m/s. Only works for gpt-3.5-turbo-0125.
+#
+PE_CHAIN_OF_THOUGHT_NAVBALL_SPEED="
+
+HUMAN: Given these observations
+{\"vehicle_mass\": 6685.0, \"vehicle_propellant\":1199.9976806640625,
+\"pursuer_pos_x\": 707714.9233405391, \"pursuer_pos_y\": -248272.96224747336, \"pursuer_pos_z\": -0.0005507227224457853,
+\"pursuer_vel_x\": 718.2699440171854, \"pursuer_vel_y\": 2047.6550602366287, \"pursuer_vel_z\": -8.727880298612636e-06,
+\"evader_pos_x\": 708577.1048547915, \"evader_pos_y\": -245801.0041154024, \"evader_pos_z\": -0.42948227236866804,
+\"evader_vel_x\": 711.1178432623287, \"evader_vel_y\": 2050.1498254215267, \"evader_vel_z\": 0.0035782107557670575,
+\"prograde\": [0.6553969259127622, -0.3380649604462953, -0.6754013266366493],
+\"approach_velocity\": 42.605571772994196}
+what is the best throttle to capture evader?
+
+ASSISTANT: The x coordinate of prograde is positive, indicating that pursuer is moving to the right. The y coordinate
+of the prograde is negative, indicating that evader is approaching. The z coordinate of prograde is negative,
+indicating that pursuer is moving down. To capture the evader we should move in the opposite direction in the x axis,
+towards the target in the y axis, and in the opposite direction in the z axis. This means we should apply
+throttles to move left, forward and up. Since approach_velocity is greater than 20 we should not apply forward throttle.
+Therefore we should call
+perform_action({\"Right throttle\": \"left\", \"Forward throttle\": \"none\", \"Down throttle\": \"up\"}).
+
+Now answer the following question:\n"
+
+PE_CHAIN_OF_THOUGHT_NAVBALL_SPEED_ALT="
+
+HUMAN: Given these observations
+{\"vehicle_mass\": 6685.0, \"vehicle_propellant\":1199.9976806640625,
+\"pursuer_pos_x\": 707714.9233405391, \"pursuer_pos_y\": -248272.96224747336, \"pursuer_pos_z\": -0.0005507227224457853,
+\"pursuer_vel_x\": 718.2699440171854, \"pursuer_vel_y\": 2047.6550602366287, \"pursuer_vel_z\": -8.727880298612636e-06,
+\"evader_pos_x\": 708577.1048547915, \"evader_pos_y\": -245801.0041154024, \"evader_pos_z\": -0.42948227236866804,
+\"evader_vel_x\": 711.1178432623287, \"evader_vel_y\": 2050.1498254215267, \"evader_vel_z\": 0.0035782107557670575,
+\"prograde\": [0.6553969259127622, -0.3380649604462953, -0.6754013266366493],
+\"approach_velocity\": 42.605571772994196}
+what is the best throttle to capture evader?
+
+ASSISTANT: prograde[0] is positive, indicating that pursuer is moving to the right. prograde[1] is negative,
+indicating that evader is approaching. prograde[2] is negative, indicating that pursuer is moving down.
+To capture the evader we should move in the opposite direction in the x axis,
+towards the target in the y axis, and in the opposite direction in the z axis. This means we should apply
+throttles to move left, forward and up. Since approach_velocity is greater than 20 we should not apply forward throttle.
+Therefore we should call
+perform_action({\"Right throttle\": \"left\", \"Forward throttle\": \"none\", \"Down throttle\": \"up\"}).
+
+Now answer the following question:\n"
+
+PE_CHAIN_OF_THOUGHT_intercept_time_distance="
+
+HUMAN: Given these observations {\"vehicle_mass\": 6533.7578125, \"vehicle_propellant\": 1162.1893310546875, \"pursuer_pos_x\": 748243.550311276, \"pursuer_pos_y\": -46677.30077085126, \"pursuer_pos_z\": 8.218719447565329, \"pursuer_vel_x\": 143.89920172896166, \"pursuer_vel_y\": 2204.7029701625765, \"pursuer_vel_z\": 0.1426803964063446, \"evader_pos_x\": 748609.3163493108, \"evader_pos_y\": -45552.67652569397, \"evader_pos_z\": -0.0797245235282559, \"evader_vel_x\": 131.73978256022724, \"evader_vel_y\": 2165.99188844506, \"evader_vel_z\": 0.0037867333700793}, what is the best throttle to capture evader?
+
+ASSISTANT: Relative position is 1182.64[m] and relative velocity is 40.58[m/s]. This means that the intercept time is 29.15[s]. At -1[m/s/s] the vessel can be stopped in 40.58[s] which is much greater than, greater than or close to intercept time. Thus we decelerate.
+
+HUMAN: Given these observations {\"vehicle_mass\": 6533.7578125, \"vehicle_propellant\": 1162.1893310546875, \"pursuer_pos_x\": 748243.550311276, \"pursuer_pos_y\": -46677.30077085126, \"pursuer_pos_z\": 8.218719447565329, \"pursuer_vel_x\": 143.89920172896166, \"pursuer_vel_y\": 2204.7029701625765, \"pursuer_vel_z\": 0.1426803964063446, \"evader_pos_x\": 748609.3163493108, \"evader_pos_y\": -45552.67652569397, \"evader_pos_z\": -0.0797245235282559, \"evader_vel_x\": 131.73978256022724, \"evader_vel_y\": 2165.99188844506, \"evader_vel_z\": 0.0037867333700793}, what is the best throttle to capture evader?
+
+ASSISTANT: Relative position is 306.41[m] and relative velocity is 15.35[m/s]. This means that the intercept time is 19.94[s]. At -1[m/s/s], the vessel can be stopped in 15.35[s], which is less than the intercept time. Since the relative position is less than 1000[m] we decelerate.
+Now answer the following question:\n"
+
+PE_CHAIN_OF_THOUGHT_intercept_time="
+
+HUMAN: Given these observations {\"vehicle_mass\": 6625.28271484375, \"vehicle_propellant\": 1185.070556640625, \"pursuer_pos_x\": 727837.3894766155, \"pursuer_pos_y\": -180480.27869273865, \"pursuer_pos_z\": 5.807362643831641, \"pursuer_vel_x\": 514.9914675766064, \"pursuer_vel_y\": 2108.419252035509, \"pursuer_vel_z\": 0.1829144595311495, \"evader_pos_x\": 728585.8621879339, \"evader_pos_y\": -177930.41624239765, \"evader_pos_z\": -0.3110974386569856, \"evader_vel_x\": 514.7490839932592, \"evader_vel_y\": 2108.0469472906925, \"evader_vel_z\": 0.0036793921984077}, what is the best throttle to capture evader?
+
+ASSISTANT: Relative position in magnitude is 2657.45[m] and relative velocity in magnitude is 0.48[m/s] so intercept time is estimated as 5547.37[s]. At -1[m/s/s] the vessel can be stopped in 0.48[s] which is much lower than intercept time. Thus we accelerate.
+
+Now answer the following question:\n"
+
+PE_USER_PROMPT="{CoT}Given these observations {obs}, what is the best throttle to capture evader?."
+
+# This prompt reduces latency in Llama API significantly by just adding "Return only throttles"
+PE_USER_PROMPT_LLAMA="{CoT}Given these observations {obs}, what is the best throttle to capture evader?. Return only throttles."
+
+# This prompt works for gpt-3.5-turbo-0125 using the CoT Navball.
+# Despite the fact that system prompt includes "Reason step-by-step" we need to include it in the user prompt for
+# fine-tuned models. Otherwise, the fine-tuned model does not follow the CoT reasoning and always responds with
+# fixed throtte values (those values are the ones used in the ASSISTANT of PE_CHAIN_OF_THOUGHT_NAVBALL_BASIC,
+# namely forward, left and up.
+#
+# IMPORTANT: Do not use this prompt for training file of fine tuned models. Only use by the running agent.
+#
+PE_USER_PROMPT_NAVBALL="{CoT}Given these observations {obs}, what is the best throttle to capture evader?. Reason step-by-step."
+
+PE_USER_PROMPT_orig="{CoT}Given these observations {obs}, what is the best throttle to capture evader?."
+PE_USER_PROMPT_CoT="{CoT}Given these observations {obs}{calculations}, call the perform_action with the best throttle to capture evader after reasoning step-by-step and show reasoning."
+PE_USER_PROMPT_CoT="{CoT}Given these observations {obs}, call the perform_action with the best throttle to capture evader after reasoning step-by-step and show reasoning."
+
+PE_USER_PROMPT_dstop='{CoT}Given these observations {obs} and "dstop": {distance_to_stop}, what is the best throttle to capture evader?'
+
+PE_USER_PROMPT="{CoT}Given these observations {obs}, an oracle suggests moving {rec}. What is the best throttle to capture evader?. Return only throttles."
+PE_USER_PROMPT_ignore="{CoT}Given these observations {obs}, what is the best throttle to capture evader?. Call perform_action(\"ft\": \"none\", \"rt\": \"right\", \"dt\": \"none\"\) if distance to guard is between 1200 and 900. Return only throttles."
+PE_USER_PROMPT="{CoT}Given these observations {obs}, what is the best throttle to capture evader?. Return only throttles."
+
+PE_HISTORY_PROMPT="Here are your last actions from oldest to newest:\n"
+PE_HISTORY_ITEM_PROMPT="\tFor observations {obs}, where the evader is {movement_direction}, your action was {action}. "
+
+########################
+# Prompts for SB problem
+########################
+
+# System prompt when not using windows
+SB_SYSTEM_PROMPT="You operate as an autonomous agent for a vessel, receiving queries every half-second regarding the
+optimal throttles to apply in the current state to achieve a goal. The state encompasses information such as the mass,
+position, and velocity of your vessel and of a satellite, and the Sun's position. Your goal is to maneuver your vessel
+so that the angle between the vessel-to-satellite vector and the vessel-to-sun vector, or alignment angle, approaches
+180 degrees. You should also maintain a distance of approximately 100 meters from the satellite. As a hint you should
+accelerate in the direction of the relative position to the satellite if it is more than 200 m. away. After reasoning
+call the perform_action function."
+
+# System prompt when using windows (SB_SYSTEM_PROMPT_WINDOW)
+SB_SYSTEM_PROMPT_NWD="You operate as an autonomous agent for a vessel, receiving queries every half-second regarding the
+optimal throttles to apply in the current state to achieve a goal. The state encompasses information such as the mass,
+position, and velocity of your vessel and of a satellite, and the Sun's position. Your goal is to maneuver your vessel
+so that the angle between the vessel-to-satellite vector and the vessel-to-sun vector, or alignment angle, approaches
+180 degrees. You should also maintain a distance of approximately 100 meters from the satellite. As a hint you should
+accelerate in the direction of the relative position to the satellite if it is more than 200 m. away. To help you make
+a decision you will be given your last actions and corresponding states from oldest to newest. After reasoning call the
+perform_action function."
+
+SB_SYSTEM_PROMPT_ok="You operate as an autonomous agent for a vessel, receiving queries every half-second regarding the optimal throttles
+to apply in the current state to achieve a goal. The state encompasses information such as the mass, position, and velocity of your vessel,
+as well as the position and velocity of a satellite, and the Sun's position. Your vessel and the satellite are orbiting the planet Kerbin (Kerbal Space Program) at (0, 0, 0).
+Positions and velocities are given in Cartesian coordinates and you can ignore the Sun's gravity. The alignment angle represents the angle between the vessel-to-satellite vector and
+the vessel-to-sun vector. Your goal is to maneuver your vessel so that the alignment angle approaches 180 degrees, and the distance to the satellite is approximately
+100 meters. To help you make a decision you will be given your last actions and corresponding states from oldest to newest."
+
+# System prompt when using relative positions and velocities
+SB_SYSTEM_PROMPT_REL="You are an autonomous agent for a vessel that is asked every second the optimal throttles to apply in current state to achieve a goal.
+The state includes information such as the mass, the position and velocity of a satellite relative to your vessel and the sun position relative to your vessel.
+Positions and velocities are given in cartesian coordinates. The alignment angle is the angle between the vessel to satellite vector and the vessel to sun vector.
+Your goal is to maneuver your vessel so that the alignment angle is close to 180 degrees and its distance to the satellite is close to 100 m."
+
+# User prompts
+#
+# NOTE: Possible values of angle/distance gauge are: "excellent", "good", "average", "poor", "extremely poor"
+#
+
+# Old style prompts (CoT before observations)
+#SB_USER_PROMPT="{CoT} Given these observations {obs}, what is the best action for the sun blocking problem?"
+#SB_CHAIN_OF_THOUGHT="The alignment angle is {angle_gauge} ({angle:.2f} degrees) and the distance from the vessel to the satellite is {distance_gauge} ({distance:.2f} m). "
+
+# New style prompts (CoT after observations)
+SB_USER_PROMPT="Given these observations {obs}{CoT}, what is the best action for the sun blocking problem?"
+SB_CHAIN_OF_THOUGHT=", where the alignment angle is {angle_gauge} ({angle:.2f} degrees) and the distance from the vessel to the satellite is {distance_gauge} ({distance:.2f} m)"
+
+SB_HISTORY_PROMPT="Here are your last actions from oldest to newest:\n"
+SB_HISTORY_ITEM_PROMPT="\tFor observations {obs}, where the alignment angle is {angle_gauge} ({angle:.2f} degrees) and the distance from the vessel to the satellite is {distance_gauge} ({distance:.2f} m), your action was {action}. "
+
+SB_SYSTEM_PROMPT_1="You are an autonomous agent for a vessel that is asked every second the optimal trottles to be applied in current state to achieve a goal.
+The state includes information such as the mass, position and velocity of your vessel, the position and velocity of a satellite and the sun position.
+Your vessel and the satellite are orbiting a celestial body which is fixed at (0, 0, 0). Your goal is to minimize the alignment angle that is the angle, in absolute value,
+between the vector from satellite to sun and the vector from satellite to your vessel. The vessel should be positioned 100m away from the satellite. After reasoning call the
+perform_action function giving numerical arguments only."
+
+SB_SYSTEM_PROMPT_2="You are an autonomous agent for a vessel that is asked every second the optimal trottles to be applied in current state to achieve a goal.
+The state includes information such as the mass, position and velocity of your vessel, the position and velocity of a satellite and the sun position.
+Your vessel and the satellite are orbiting a celestial body which is fixed at (0, 0, 0). Your goal is to minimize the alignment angle that is the angle, in absolute value,
+between the vector from satellite to sun and the vector from satellite to your vessel. The vessel should be positioned 100m away from the satellite. An alignment angle above 5 degrees is regarded as poor. Show only result after calculations."
+
+SB_SYSTEM_PROMPT_3="You are an autonomous agent for a vessel that is asked every second the optimal trottles to apply in current state to achieve a goal.
+The state includes information such as the mass, position and velocity of your vessel, the position and velocity of a satellite and the sun position.
+Your vessel and the satellite are orbiting a celestial body which is fixed at (0, 0, 0). Positions and velocities are given in cartesian coordinates.
+Your goal is to maximize the alignment angle: the angle between the vessel to satellite vector and the vessel to sun vector. The vessel should be positioned 100m away from the satellite."
+
+SB_SYSTEM_PROMPT_3_5="You are an autonomous agent for a vessel that is asked every second the optimal trottles to apply in current state to achieve a goal.
+The state includes information such as the mass, position and velocity of your vessel, the position and velocity of a satellite and the sun position.
+Your vessel and the satellite are orbiting a celestial body which is fixed at (0, 0, 0). Positions and velocities are given in cartesian coordinates.
+Your goal is to maximize the alignment angle without approaching the satellite less than 100m. The alignment angle is the angle between the vessel to satellite vector and the vessel to sun vector.
+Perform throttle adjustments when the alignment angle is lower than 170 degrees and the distance to the satellite is greater than 10000m. Show reasoning."
+
+SB_SYSTEM_PROMPT_4="You are an autonomous agent for a vessel that is asked every second the optimal trottles to apply in current state to achieve a goal.
+The state includes information such as the mass, position and velocity of your vessel, the position and velocity of a satellite and the sun position.
+Your vessel and the satellite are orbiting a celestial body which is fixed at (0, 0, 0). Positions and velocities are given in cartesian coordinates.
+Your goal is to maximize the alignment angle and maintain a distance between your vessel and satellite close to 100m. Consider the evolution of your vessel and the satellite
+positions after 5 seconds and perform adjustments if the alignment angle is lower than 170 degrees and the distance to the satellite is greater than 200m."
+
+#########################
+# Prompts for LBG problem
+#########################
+
+LBG_SYSTEM_PROMPT="You operate as an autonomous agent controlling a Bandit spacecraft. Your goal is to apply throttles
+to capture the Lady spacecraft surrounding the Guard spacecraft given the positions and velocities of Bandit,
+Lady and Guard. Lady, Bandit, and Guard are all in the same circular orbit, and Guard is in between Lady and Bandit with
+Guard ~600m retrograde of Lady. Lady applies heuristic evasive maneuvers of Bandit when Guard detects Bandit. Please apply throttles to capture
+Lady and surround Guard. Do not show neither reasoning nor calculations. After reasoning call the perform_action function."
+
+LBG_SYSTEM_PROMPT_NAVBALL="You operate as an autonomous agent controlling a Bandit spacecraft. Your goal is to apply throttles
+to capture the Lady spacecraft surrounding the Guard spacecraft given the positions and velocities of Bandit,
+Lady and Guard. Lady, Bandit, and Guard are all in the same circular orbit, and Guard is in between Lady and Bandit with
+Guard ~600m retrograde of Lady. Lady applies heuristic evasive maneuvers of Bandit when Guard detects Bandit.  Throttles must be given
+in your vessel reference frame wherein the x axis points to the right, the y axis points towards the target and
+the z axis points upwards. The maximum throttle is 1. Reason step-by-step.
+After reasoning call the perform_action function."
+
+LBG_CHAIN_OF_THOUGHT=""
+
+LBG_CHAIN_OF_THOUGHT_NAVBALL="
+
+HUMAN: Given these observations {\"vehicle_mass\": 6685.0, \"vehicle_propellant\":
+1199.9976806640625, \"bandit_pos_x\": 707714.9233405391, \"bandit_pos_y\": -248272.96224747336, \"bandit_pos_z\":
+-0.0005507227224457853, \"bandit_vel_x\": 718.2699440171854, \"bandit_vel_y\": 2047.6550602366287, \"bandit_vel_z\":
+-8.727880298612636e-06, \"lady_pos_x\": 708577.1048547915, \"lady_pos_y\": -245801.0041154024, \"lady_pos_z\":
+-0.42948227236866804, \"lady_vel_x\": 711.1178432623287, \"lady_vel_y\": 2050.1498254215267, \"lady_vel_z\":
+0.0035782107557670575, \"prograde\": [0.6553969259127622, -0.3380649604462953, -0.6754013266366493]},
+what is the best throttle to capture lady?
+
+ASSISTANT: prograde[0] is positive, indicating that bandit is moving to the right. prograde[1] is negative,
+indicating that lady is approaching. prograde[2] is negative, indicating that bandit is moving down.
+To capture the lady, we should move in the opposite direction in the first dimension, towards the target
+in the second dimension, and in the opposite direction in the third dimension.
+This means we should apply throttles to move left, forward and up. Therefore we should call
+perform_action({\"ft\": \"forward\", \"rt\": \"left\", \"dt\": \"up\"}).
+
+
+Now answer the following question:\n"
+
+LBG_CHAIN_OF_THOUGHT="
+HUMAN: Given these observations {\"vehicle_mass\": 6685.0, \"vehicle_propellant\":
+1199.9976806640625, \"bandit_pos_x\": 707714.9233405391, \"bandit_pos_y\": -248272.96224747336, \"bandit_pos_z\":
+-0.0005507227224457853, \"bandit_vel_x\": 718.2699440171854, \"bandit_vel_y\": 2047.6550602366287, \"bandit_vel_z\":
+-8.727880298612636e-06, \"lady_pos_x\": 708577.1048547915, \"lady_pos_y\": -245801.0041154024, \"lady_pos_z\":
+-0.42948227236866804, \"lady_vel_x\": 711.1178432623287, \"lady_vel_y\": 2050.1498254215267, \"lady_vel_z\":
+0.0035782107557670575, \"prograde\": [0.6553969259127622, -0.3380649604462953, -0.6754013266366493]},
+what is the best throttle to capture lady?
+
+ASSISTANT: prograde[0] is positive, indicating that bandit is moving to the right. prograde[1] is negative,
+indicating that lady is approaching. prograde[2] is negative, indicating that bandit is moving down.
+To capture the lady, we should move in the opposite direction in the first dimension, towards the target
+in the second dimension, and in the opposite direction in the third dimension.
+This means we should apply throttles to move left, forward and up. Therefore we should call
+perform_action({\"ft\": \"forward\", \"rt\": \"left\", \"dt\": \"up\"}).
+
+Now answer the following question:\n"
+
+LBG_USER_PROMPT="{CoT}Given these observations {obs}, what is the best throttle to capture lady?."
+
+LBG_USER_PROMPT="{CoT}Given these observations {obs}, what is the best throttle to capture lady?. Return only throttles."
+LBG_USER_PROMPT="{CoT}Given these observations {obs}, an oracle suggests moving {rec}. What is the best throttle to capture lady?. Return only throttles."
+LBG_USER_PROMPT="{CoT}Given these observations {obs}, what is the best throttle to capture lady?. Return only throttles."
+
+LBG_HISTORY_PROMPT="Here are your last actions from oldest to newest:\n"
+
+LBG_HISTORY_ITEM_PROMPT="\tFor observations {obs}, your action was {action}. "
+
+# LBG Prompts for Claude
+
+LBG_SYSTEM_PROMPT_CLAUDE="You operate as an autonomous agent controlling a Bandit spacecraft. Your goal is to apply throttles
+to capture the Lady spacecraft surrounding the Guard spacecraft. For this task you are given an image of the navball.
+To capture the lady you should counteract lady's motion by applying throttles that push the prograde marker to the center of the navball.
+You should not apply forward throttle if target speed is greater than 10 m/s and lady is approaching.
+Lady applies heuristic evasive maneuvers of Bandit when Guard detects Bandit. Please apply throttles to capture
+Lady and surround Guard. The maxiomum throttle is 1.
+
+You should breakdown the problem as follows:
+
+1. Decide on the action based on the prograde, target speed and target distance analysis.
+2. Appply the guard avoidance action {\"ft\": \"none\", \"rt\": \"right\", \"dt\": \"none\"} if distance to guard is between 850m and 1250m.
+
+After reasoning call the perform_action function."
+
+LBG_CHAIN_OF_THOUGHT_CLAUDE="
+USER: Given prograde [-0.6133, 0.7081, 0.7867], guard distance 1963.35,
+target distance 2500.00 target speed 8.02 and lady is approaching, what is the best throttle to capture the lady?
+
+ASSISTANT: Let me analyze the situation:
+1. Prograde vector analysis:
+- X component (-0.6133) is significantly negative -> needs right throttle
+- Y component (0.7081) is significantly positive -> needs down throttle
+- Ignore Z component.
+2. Speed analysis:
+- target speed is under 10 m/s and target distance is more than 200m -> needs forward throttle
+3. Distance check:
+- Distance to guard is 1963.35m which is outside the avoidance range (850m-1250m)
+- No need for avoidance maneuver
+
+Given these conditions, I should:
+- Apply right throttle to counter the negative X component\n- Apply a small down throttle to counter the slight positive Y component
+- forward throttle since target is approaching, speed is under 10 m/s and target distance is more than 200m
+Therefore, I will call:\nperform_action({\"ft\": \"forward\", \"rt\": \"right\", \"dt\": \"down\"})
+
+Now answer the following question:\n"
+
+LBG_USER_PROMPT_CLAUDE="{CoT}Given prograde [{prograde[0]:.4f}, {prograde[1]:.4f}, {prograde[2]:.4f}], guard distance {guard_distance:.2f}, target distance {target_distance:.2f} target speed {target_speed:.2f} and lady is {approaching_label}, what is the best throttle to capture the lady?."
+
+
+LBG_SYSTEM_PROMPT_CLAUDE_II="You operate as an autonomous agent controlling a Bandit spacecraft. Your goal is to apply throttles
+to capture the Lady spacecraft surrounding the Guard spacecraft. For this task you are given an image of the navball.
+To capture the lady you should counteract lady's motion by applying throttles that push the prograde marker to the center of the navball.
+You should not apply forward throttle if target speed is greater than 10 m/s and lady is approaching.
+You should apply backward throttle if target speed is greater than 40 m/s and lady is approaching.
+Lady applies heuristic evasive maneuvers of Bandit when Guard detects Bandit. Please apply throttles to capture
+Lady and surround Guard. The maxiomum throttle is 1.
+
+You should breakdown the problem as follows:
+
+1. Decide on the action based on the prograde, target speed and target distance analysis.
+2. Appply the guard avoidance action {\"ft\": \"forward\", \"rt\": \"right\", \"dt\": \"none\"} during the first 45s of your mission.
+
+After reasoning call the perform_action function."
+
+LBG_CHAIN_OF_THOUGHT_CLAUDE_II="
+USER: Given mision time 70s, prograde [-0.6133, 0.7081, 0.7867], guard distance 1963.35,
+target distance 2500.00 target speed 8.02 and lady is approaching, what is the best throttle to capture the lady?
+
+ASSISTANT: Let me analyze the situation:
+1. Prograde vector analysis:
+- X component (-0.6133) is significantly negative -> needs right throttle
+- Y component (0.7081) is significantly positive -> needs down throttle
+- Ignore Z component.
+2. Speed analysis:
+- target speed is under 10 m/s and target distance is more than 200m -> needs forward throttle
+3. Mission time check:
+- Mission time is 70s which is outside of the avoidance range (<45s)
+- No need for avoidance maneuver
+
+Given these conditions, I should:
+- Apply right throttle to counter the negative X component\n- Apply a small down throttle to counter the slight positive Y component
+- forward throttle since target is approaching, speed is under 10 m/s and target distance is more than 200m
+Therefore, I will call:\nperform_action({\"ft\": \"forward\", \"rt\": \"right\", \"dt\": \"down\"})
+
+Now answer the following question:\n"
+
+LBG_USER_PROMPT_CLAUDE_II="{CoT}Given mission time {mission_time:.2f}, prograde [{prograde[0]:.4f}, {prograde[1]:.4f}, {prograde[2]:.4f}], guard distance {guard_distance:.2f}, target distance {target_distance:.2f} target speed {target_speed:.2f} and lady is {approaching_label}, what is the best throttle to capture the lady?."
+
+
+#########################
+# Assistant Prompt
+#########################
+
+ASSISTANT_CONTENT="The best throttle is"
+
+# Use for training fine-tuned models using CoT Navball
+ASSISTANT_CONTENT_NAVBALL="I will call {action}"
+
+# System prompt with visual information for LBG
+LBG_SYSTEM_PROMPT_VISION="You are an autonomous agent in control of a pursuit spacecraft, aiming to capture an evader spacecraft. Your task is to determine optimal throttle settings, based on the real-time positions and velocities of both the pursuer and evader, in order to achieve interception. Your control decisions should adhere to limitations, including maximum throttle values and specific reference frames.
+
+**Details:**
+- Throttles must be set according to the vessel reference frame:
+  - The x-axis points to the right.
+  - The y-axis points forward, towards the target.
+  - The z-axis points upwards.
+  - Throttle values must range between -1 and 1.
+- The goal is to accelerate when distant and decelerate as you approach to avoid overshooting.
+  
+# Steps
+
+1. **Situation Analysis**:
+   - Analyze the provided data on current positions and velocities of both spacecraft.
+   - Determine the throttle direction along the x, y, and z axes required to align with the evader's trajectory and close the distance.
+
+2. **Determine Throttle Control**:
+   - Calculate throttle settings to effectively chase the evader by aligning them with relative positions and velocities.
+   - Balance acceleration and deceleration to minimize overshooting and maximize interception efficiency.
+
+3. **Execute Command**:
+   - Use the resulting throttle values to generate a final control command in the form required by the `perform_action` function.
+
+# Output Format
+
+- The output should be a JSON object representing throttle values in the following structure:
+
+```json
+{
+  \"ft\": [value for y-axis throttle],
+  \"rt\": [value for x-axis throttle],
+  \"dt\": [value for z-axis throttle]
+}
+```
+- Each value must be either `-1`, `0`, or `1`, indicating the direction and magnitude for each axis throttle movement.
+
+# Examples
+
+**Example 1:**
+- **Input**: Current distance to Lady: 2.7 kilometers (starting point); Cannot see prograde.
+- **Reasoning**: Locate prograde and increment forward throttle for a steady approach.
+- **Output**:
+```json
+{
+  \"ft\": 1,
+  \"rt\": 1,
+  \"dt\": -1
+}
+```
+
+**Example 2:**
+- **Input**: Current distance to Lady: 1000 meters; Prograde is on the left of the NavBall with no cross inside; Current speed: greater than 20 m/s.
+- **Reasoning**: Reduce forward throttle to avoid overshooting. Adjust x-axis throttle to match alignment.
+- **Output**:
+```json
+{
+  \"ft\": -1,
+  \"rt\": -1,
+  \"dt\": 0
+}
+```
+
+**Example 3:**
+- **Input**: Current distance to Lady: 500 meters; Prograde is in the top right of the NavBall with a cross inside; Current speed: 20 m/s.
+- **Reasoning**: Slightly increase throttle to maintain a controlled approach and correct prograde direction.
+- **Output**:
+```json
+{
+  \"ft\": 0,
+  \"rt\": 1,
+  \"dt\": 1
+}
+```
+
+**Example 4:**
+- **Input**: Current distance to Lady: 1 kilometer; Prograde is slightly below the center of the NavBall; Current speed: 25 m/s.
+- **Reasoning**: Decrease forward throttle to reduce aggressive approach. Adjust throttle to correct prograde's downward alignment.
+- **Output**:
+```json
+{
+  \"ft\": -1,
+  \"rt\": 0,
+  \"dt\": 1
+}
+```
+
+# Notes
+- Make sure to avoid overshooting by decelerating appropriately as you get closer.
+- Set throttle values based on alignment to maintain efficient trajectory toward the evader.
+- Consider future position and velocity correction needs before finalizing throttle commands."
+
+LBG_SYSTEM_PROMPT_VISION_OLD_GPT="Determine the optimal throttle settings for a pursuit spacecraft to intercept an evader spacecraft. Base your decisions on the real-time positions and velocities of both vessels within the celestial reference frame. Ensure your control decisions adhere to constraints such as maximum throttle and specific reference frames for movement.
+
+**Details**:
+- Throttle adjustments should align with the vessel's reference frame, where:
+  - X-axis (rt) points right,
+  - Y-axis (ft) points forward toward the target,
+  - Z-axis (dt) points upwards.
+  - Throttle values range from Backward (-1), None (0), to Forward (1) in each direction.
+- Use directional controls to facilitate capture by accelerating when distant and decelerating upon approach to prevent overshoot.
+
+# Steps
+
+1. **Situation Analysis**:
+   - Analyze the provided position and velocity data of both the pursuer and evader.
+   - Determine necessary throttle adjustments in the x, y, and z axes to align with and close in on the evader's trajectory.
+
+2. **Throttle Decisions**:
+   - Prioritize throttle settings based on the relative position and velocity differences.
+   - Adjust acceleration to ensure effective interception without overshooting.
+
+3. **Execute Control Command**:
+   - Use the calculated throttle settings to generate a control command formatted for the `perform_action`.
+
+# Output Format
+
+- Produce a function call for action using the evaluated throttle settings, structured in JSON as below:
+```json
+{
+  \"ft\": \"[directional term for y-axis throttle]\",
+  \"rt\": \"[directional term for x-axis throttle]\",
+  \"dt\": \"[directional term for z-axis throttle]\"
+}
+```
+- Values should be \"Forward\", \"Backward\", or \"None\", denoting the throttle direction.
+
+# Examples
+
+**Example 1:**
+- **Input**: Distance at 2.7 km; inability to see prograde.
+- **Reasoning**: Align with prograde and increase forward throttle to approach.
+- **Output**:
+```json
+{
+  \"ft\": \"forward\",
+  \"rt\": \"right\",
+  \"dt\": \"up\"
+}
+```
+
+**Example 2:**
+- **Input**: Distance at 1000 meters; prograde left on NavBall without cross; speed 20 m/s.
+- **Reasoning**: Keep motion to avoid overshoot but still approach and adjust prograde.
+- **Output**:
+```json
+{
+  \"ft\": \"none\",
+  \"rt\": \"right\",
+  \"dt\": \"none\"
+}
+```
+
+**Example 3:**
+- **Input**: Distance at 500 meters; prograde top right on NavBall with cross; speed 30 m/s.
+- **Reasoning**: Further adjust throttle to counteract overshoot and correct prograde.
+- **Output**:
+```json
+{
+  \"ft\": \"forward\",
+  \"rt\": \"left\",
+  \"dt\": \"up\"
+}
+```
+
+- **Reasoning**:
+  - Evaluate existing alignment metrics.
+  - Adjust throttle values to align for interception.
+  - Output json request perform-action **"
+"
+
+CLAUDE_VISION_SYSTEM_PROMPT="You are an AI controlling a pursuit spacecraft tasked with capturing an evader spacecraft. Your goal is to determine the optimal throttle settings for interception based on real-time positional and velocity data.\n\n<PROGRADE_POSITION>\n</PROGRADE_POSITION>\nThis represents the position of the prograde marker on the NavBall.\n\nYour task is to analyze this information and determine the optimal throttle settings for interception. You must adhere to the following constraints:\n1. Throttles must be set in the vessel reference frame where:\n   - The x-axis points to the right.\n   - The y-axis points forward towards the target.\n   - The z-axis points upwards.\n2. The maximum throttle value is 1, and the minimum value is -1.\n3. Use directional control to effectively capture the evader.\n4. The goal is to accelerate when distant and decelerate as you approach to avoid overshooting.\n\nFollow these steps to complete your analysis:\n\n1. Calculate the relative position and velocity of the evader with respect to your spacecraft.\n2. Determine the distance to the evader and your current approach speed.\n3. Analyze the prograde position to understand your current trajectory.\n4. Based on the distance and approach speed, decide whether you need to accelerate or decelerate.\n5. Determine the necessary direction of throttles in x, y, and z axes to align with the evader's trajectory and close the distance.\n6. Adjust your throttle decisions to prioritize using throttles aligned with the prograde.\n7. Fine-tune your acceleration to reach the evader effectively while minimizing detection or overshoot risk.\n\nAfter your analysis, provide your throttle decisions in the following format:\n\n<throttle_decision>\n{\n  \"ft\": [value for y-axis throttle],\n  \"rt\": [value for x-axis throttle],\n  \"dt\": [value for z-axis throttle]\n}\n</throttle_decision>\n\nEach value will be converted to either -1, 0, or 1, indicating direction and magnitude of each throttle movement.\n\nBefore providing your final decision, explain your reasoning only about the prograde. Use a <reasoning> tag for this explanation. For example:\n\n<reasoning>\nThe x coordinate of prograde is positive, indicating that evader is moving to the right. The y coordinate\\nof prograde is negative, indicating that evader is approaching. The z coordinate of prograde is negative,\\nindicating that evader is moving down. To capture the evader we should counteract its motion, moving in the opposite\\ndirection in the x axis, towards the target in the y axis, and in the opposite direction in the z axis. This means\\nwe should apply throttles to move left, forward and up.\n</reasoning>\n\n<throttle_decision>\n{\n  \"ft\": 1,\n  \"rt\": 1,\n  \"dt\": -1\n}\n</throttle_decision>\n\nRemember, your goal is to intercept the evader spacecraft as efficiently as possible. Always provide a detailed reasoning for your decisions before giving the final throttle settings. Your analysis should consider the current positions, velocities, and the prograde marker to make the most effective decisions for interception."
+
+LBG_SYSTEM_PROMPT_VISION_OLD_GPT="You operate as an autonomous agent controlling a pursuit spacecraft. Your goal is to apply
+throttles to capture the evader given the positions and velocities of the pursuer and evader in celestial body
+reference frame and the direction of pursuer's velocity relative to evader or prograde. Throttles must be given
+in your vessel reference frame wherein the x axis points to the right, the y axis points towards the target and
+the z axis points upwards. The maximum throttle is 1. Reason step-by-step."
+
+LBG_SYSTEM_PROMPT_VISION_FEW_SHOT="Operate as an autonomous agent controlling a pursuit spacecraft. Your mission is to capture the evader by making precise adjustments to your pursuit spacecraft's throttles. You have been provided with the positions and velocities of both the pursuer (your spacecraft) and the evader, all within a celestial body reference frame. Additionally, account for the direction of your spacecraft's velocity relative to the evader or the prograde vector.
+
+All throttle adjustments must be made within your vessel's reference frame, where:
+- The x-axis points to the right.
+- The y-axis points directly towards the target.
+- The z-axis points upwards.
+
+# Steps
+
+1. **Analyze the Position and Velocity:** Begin by understanding the relative positions and velocities of the pursuer and the evader.
+2. **Determine Velocity Direction:** Assess the direction of the pursuer's velocity concerning the evader.
+3. **Calculate Throttle Adjustments:** Step-by-step reasoning is required to calculate the necessary throttle adjustments in the x, y, and z axes to align the pursuer's trajectory with the evader's position.
+4. **Prograde/Retrograde Alignment:** Focus on aligning the vessel in the center of the prograde (yellow circle) or retrograde (yellow circle with a cross).
+5. **Execution through Function Call:** Use the function `perform_action(ft, rt, dt)` to execute the calculated throttle adjustments.
+6. **Prograde vs Retrograde:** Remember that the yellow circle means prograde, while the yellow circle with a cross inside means retrograde. If you see the prograde it means you're moving toward the target, forward motion. If you see the retrograde you're moving away from the target, backward motion.
+
+- **Retrograde**: The yellow circle with a cross means you're moving away from the target.
+
+# Output format
+The function calling offers these possibilities. Prioritize forward unless you see the retrograde (which is different from the prograde) or the speed is too high.
+{
+  \"ft\": \"[forward/backward/none]\",
+  \"rt\": \"[right/left/none]\",
+  \"dt\": \"[down/up/none]\"
+}
+```
+
+# Notes
+
+- The reasoning should thoroughly consider if the prograde or the retrograde are visible, and the relative velocity and distance.
+- Ensure all calculations respect the maximum throttle value.
+- Pay attention to the changes in relative motion and adjust throttle values for effective evader capture. Prioritize forward throttles.
+- Use **forward throttle** to approach the target when the retrograde is visible, as this will reduce the speed away.
+- Limit your speed to 25 m/s maximum, there is a tolerance of +/ 5m/s, which means that the vessel is allowed to move in the 20-30 range depending on the distance, reduce speed when close to the target.
+- Align your reasoning with the function call and always reason before calling the function."

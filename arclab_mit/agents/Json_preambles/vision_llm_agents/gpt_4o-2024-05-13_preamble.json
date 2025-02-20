@@ -1,0 +1,136 @@
+{
+  "messages": [
+      {
+        "role": "user",
+        "content": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/jpeg;base64,..."
+          }
+        },
+        {
+          "type": "text",
+          "text": "What is the best throttle to approach the lady?"
+          }
+        ]
+      },
+      {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "The spacecraft is 2.6 kilometers away so we are starting the mission.  We are not close enought he guard so I don't need to avoid it in this state of the mission. My velocity is 7.2 m/s which can be incremented and I cannot spot the prograde nor the retrograde. I will increase forward throttle to find the prograde.\n\n"
+        }
+      ],
+      "tool_calls": [
+        {
+          "id": "manualToolCall_9jmgu1",
+          "type": "function",
+          "function": {
+            "name": "perform_action",
+            "arguments": "{\n  \"ft\": \"forward\",\n  \"rt\": \"none\",\n  \"dt\": \"none\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": [
+        {
+          "type": "text",
+          "text": ""
+        }
+      ],
+      "tool_call_id": "manualToolCall_9jmgu1"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/jpeg;base64,..."
+          }
+        },
+        {
+          "type": "text",
+          "text": "What is the best throttle to approach the lady?"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "The spacecraft is 2.4 kilometers away, we are approaching the lady.  I can see the prograde (yellow circle) which means my speed is positive, my velocity is 25.7 m/s, the prograde is above my nose and slightly to the right. We can increment the speed and align with the prograde."
+        }
+      ],
+      "tool_calls": [
+        {
+          "id": "manualToolCall_qf75fl",
+          "type": "function",
+          "function": {
+            "name": "perform_action",
+            "arguments": "{\n  \"ft\": \"forward\",\n  \"rt\": \"left\",\n  \"dt\": \"up\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": [
+        {
+          "type": "text",
+          "text": ""
+        }
+      ],
+      "tool_call_id": "manualToolCall_qf75fl"
+    },
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "image_url",
+          "image_url": {
+            "url": "data:image/jpeg;base64,..."
+          }
+        },
+        {
+          "type": "text",
+          "text": "What is the best throttle to approach the lady?"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "The spacecraft is now only 68.2 meters away, and the velocity is 16.1 m/s. The prograde marker is to the left of your nose, indicating you need to adjust your trajectory to align with it. Since the velocity is close to the maximum limit of 25 m/s, we should slow down and align.\n\nLet's reduce the speed and align with the prograde by adjusting throttles."
+        }
+      ],
+      "tool_calls": [
+        {
+          "id": "call_U2adyaro1rPeSWDTB3GTu2jp",
+          "type": "function",
+          "function": {
+            "name": "perform_action",
+            "arguments": "{\"ft\":\"backward\",\"rt\":\"right\",\"dt\":\"none\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "content": [
+        {
+          "type": "text",
+          "text": ""
+        }
+      ],
+      "tool_call_id": "call_U2adyaro1rPeSWDTB3GTu2jp"
+    }
+  ]
+}
