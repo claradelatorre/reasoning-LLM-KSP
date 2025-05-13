@@ -1,0 +1,81 @@
+# New way to specify project dependencies
+# Ref:
+#   https://peps.python.org/pep-0518/
+#   Example: https://github.com/Farama-Foundation/Gymnasium/blob/main/pyproject.toml
+#   Example: https://github.com/pypa/sampleproject/blob/main/pyproject.toml
+#   Guide (user-friendly): https://packaging.python.org/en/latest/guides/writing-pyproject-toml/
+#   Specification (technical, formal): https://packaging.python.org/en/latest/specifications/pyproject-toml/
+
+[build-system]
+requires = ["setuptools >= 61.0"] # to 61 or greater support single-source versioning
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kspdg"
+description = "Non-cooperative satellite operations challenge problems implemented in the Kerbal Space Program game engine"
+readme = "README.md"
+requires-python = ">=3"
+
+dependencies = [
+    "krpc",
+    "numpy",
+    "pyyaml",
+    "gymnasium"
+]
+
+# single source versioning (see tool.setuptools.dynamic table
+# https://packaging.python.org/en/latest/guides/single-sourcing-package-version/
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "kspdg.__version__"}
+
+# Ensure that private_src pyarmor shared object files are part of kspdg build
+[tool.setuptools.package-data]
+kspdg = [
+    "private_src/python3_9/Darwin_arm64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_9/Darwin_arm64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_9/Darwin_x86_64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_9/Darwin_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_9/Linux_x86_64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_9/Linux_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_9/Windows_x86_64/pyarmor_runtime_000000/*.pyd",
+    "private_src/python3_9/Windows_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_12/Darwin_arm64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_12/Darwin_arm64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_12/Darwin_x86_64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_12/Darwin_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_12/Linux_x86_64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_12/Linux_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_12/Windows_x86_64/pyarmor_runtime_000000/*.pyd",
+    "private_src/python3_12/Windows_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_13/Darwin_arm64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_13/Darwin_arm64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_13/Darwin_x86_64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_13/Darwin_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_13/Linux_x86_64/pyarmor_runtime_000000/*.so",
+    "private_src/python3_13/Linux_x86_64/kspdg_envs/lbg1/*.jl",
+    "private_src/python3_13/Windows_x86_64/pyarmor_runtime_000000/*.pyd",
+    "private_src/python3_13/Windows_x86_64/kspdg_envs/lbg1/*.jl",
+    "evaluation/configs/example_eval_cfg.yaml",
+    "tests/**/*.jl",
+    "ksp_files/**/*"
+]
+
+# Further dependencies for dev, testing, and envrionments with advanced bots
+# Kept as optional so that there are lighter-weight versions of the library
+# available
+[project.optional-dependencies]
+testing = ["pytest","matplotlib"]
+adv_bots = ["juliacall"]
+full = ["kspdg[testing,adv_bots]","build"]
+
+# Command-line entry point for julia dependency install script
+[project.scripts]
+kspdg-install-julia-deps = "kspdg.scripts.install_julia_deps:main"
+kspdg-install-ksp-files = "kspdg.scripts.install_ksp_files:main"
+kspdg-run-serverless-tests = "kspdg.scripts.run_tests:serverless_tests"
+kspdg-run-lbg1-i2-tests = "kspdg.scripts.run_tests:lbg1_i2_tests"
+kspdg-run-pe1-i3-tests = "kspdg.scripts.run_tests:pe1_i3_tests"
+kspdg-run-sb1-i5-tests = "kspdg.scripts.run_tests:sb1_i5_tests"
+kspdg-evaluate = "kspdg.evaluation.evaluate:run_evaluation"
