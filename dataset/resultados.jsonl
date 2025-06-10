@@ -1,0 +1,218 @@
+MISION 1 
+ORBIT
+{
+    SMA = 750085      // en metros
+    ECC = 0           // circular
+    INC = 0.000       // plano ecuatorial
+    LPE = 0           // argumento del periapsis
+    LAN = 0           // longitud del nodo ascendente
+    MNA = 0.863       // anomalía verdadera en grados
+    EPH = 0
+    REF = 1
+}
+
+MISION 2
+
+
+ORBIT
+{
+	SMA = 751036.545  
+	ECC = 0
+	INC = 0
+	LPE = 0
+	LAN = 0
+	MNA = 0.8645   
+	EPH = 0
+	REF = 1
+
+}
+
+((0.95, 0.085, -0.1), 30.0),
+    ((0.00,  0.00,  0.00), 210.0)  
+	 Resultados:
+  Distancia mínima (d):       22.84 m
+  Velocidad relativa (v):     38.05 m/s
+  Monopropelente usado (f):   27.51 kg
+  Tiempo hasta mínimo (t):    77.71 s
+
+✅ SCORE KSPDG: 92.51
+
+
+
+MISION 3 
+	plan:
+((1, 0, 0.15), 30.0),  
+((0.00, 0.00,  0.00), 210.0)
+	
+	
+	resultado
+{
+
+  "distance": 15.064645545601538,
+  "time": 76.50000000000192,
+  "dX": 5.4505970776081085,
+  "dY": -13.933703761547804,
+  "dZ": -1.7568256594240665,
+  "pursuer_velocity": {
+    "x": -1896.848027847315,
+    "y": 1039.8470480818064,
+    "z": 0.026978514600996196
+  },
+  "evader_velocity": {
+    "x": -1919.8126959240362,
+    "y": 1014.3618179101453,
+    "z": 3.259223733953487e-08
+  },
+  "final_mono": 1172.683349609375
+}
+Resultados:
+  Distancia mínima (d):       15.06 m
+  Velocidad relativa (v):     34.31 m/s
+  Monopropelente usado (f):   27.32 kg
+  Tiempo hasta mínimo (t):    76.50 s
+
+✅ SCORE KSPDG: 77.59
+
+MISION 4
+ SMA = 751385.000      // semimajor axis  (m)  ≃ √(751 300² + 11 300²)
+    ECC = 0               // circular (e = 0  ≤ 0.1)
+    INC = 0               // coplanar (Δi = 0° ≤ 5°)
+    LPE = 0               // irrelevant when e = 0
+    LAN = 0               // same reference node
+    MNA = 0.862           // atan2(11 300 , 751 300)  [degrees]
+    EPH = 0               // epoch (use the same UT as the evader)
+    REF = 1  
+	
+	
+	((1.00, 0.00, 0.00), 35.0),
+   ((0.00, -1.00, -1.00), 2.25),
+   ((0.00, 0.00, 0.00), 100.0) 
+   
+   
+   Resultados:
+  Distancia mínima (d):       24.85 m
+  Velocidad relativa (v):     38.16 m/s
+  Monopropelente usado (f):   32.01 kg
+  Tiempo hasta mínimo (t):    88.29 s
+
+✅ SCORE KSPDG: 94.69
+
+MISION 5
+
+
+((1.00, 0.00, 0.00), 15.0),
+   ((0.00, 0.00, 1.00), 4.0),
+   ((0.00, 1.00, 0.00), 2.0),
+   ((0.00, 0.00, 0.00), DURATION - 21)
+
+Resultados:
+  Distancia mínima (d):       32.26 m
+  Velocidad relativa (v):     17.59 m/s
+  Monopropelente usado (f):   16.66 kg
+  Tiempo hasta mínimo (t):    117.07 s
+
+✅ SCORE KSPDG: 39.54
+
+
+MISION 6 
+
+((1.00, 0.00, 0.00), 20.0),
+  ((0.00, 0.00, -1.00), 6.0),
+  ((0.00, 1.00, 0.00), 12.0),
+  ((0.00, 0.00, 0.00), 202.0)
+ Resultados:
+  Distancia mínima (d):       32.12 m
+  Velocidad relativa (v):     27.22 m/s
+  Monopropelente usado (f):   24.41 kg
+  Tiempo hasta mínimo (t):    99.09 s
+
+✅ SCORE KSPDG: 64.56
+
+
+MISION 7
+
+((1.00, 0.00, 0.00), 16.0),
+  ((0.00, 0.00, 1.00), 4.5),
+  ((0.00, -1.00, 0.00), 8.5),
+  ((0.00, 0.00, 0.00), DURATION -16-4.5-8.5)
+ Resultados:
+  Distancia mínima (d):       21.36 m
+  Velocidad relativa (v):     21.41 m/s
+  Monopropelente usado (f):   20.19 kg
+  Tiempo hasta mínimo (t):    84.21 s
+
+✅ SCORE KSPDG: 42.83
+
+MISION 8
+((1.00, 0.00, 0.00), 19),
+  ((0.00, 0.00, 1.00), 5),
+  ((0.00, -1.00, 0.00), 8),
+  ((0.00, 0.00, 0.00), DURATION-19-12)
+
+📊 Resultados:
+  Distancia mínima (d):       10.46 m
+  Velocidad relativa (v):     25.21 m/s
+  Monopropelente usado (f):   21.45 kg
+  Tiempo hasta mínimo (t):    76.10 s
+
+✅ SCORE KSPDG: 49.19
+
+
+-----------------
+SACAR DATASETS:
+-----------------
+MISION 9
+((1.00, 0.00, 0.00), 8),
+  ((0.00, 0.00, -1.00), 3),
+  ((0.00, 0.00, 0.00), DURATION -10)
+  
+  📊 Resultados:
+  Distancia mínima (d):       19.90 m
+  Velocidad relativa (v):     10.01 m/s
+  Monopropelente usado (f):   8.68 kg
+  Tiempo hasta mínimo (t):    107.28 s
+
+✅ SCORE KSPDG: 17.07
+
+MISION 10
+
+((1.00, 0.00, 0.00), 13.5),
+  ((0.00, 0.00, -1.00), 6),
+  ((0.00, 0.00, 0.00), DURATION -19.5)
+  
+  📊 Resultados:
+  Distancia mínima (d):       22.94 m
+  Velocidad relativa (v):     16.09 m/s
+  Monopropelente usado (f):   15.25 kg
+  Tiempo hasta mínimo (t):    132.91 s
+
+✅ SCORE KSPDG: 31.11
+
+MISION 11
+
+ ((1.00, 0.00, 0.00), 37),
+  ((0.00, 0.00, 0.00), 34.5),
+  ((-1.00, 0.00, 0.00), 12),
+  ((0.00, 0.00, 0.00), DURATION - 84.5) 
+
+📊 Resultados:
+  Distancia mínima (d):       15.23 m
+  Velocidad relativa (v):     24.72 m/s
+  Monopropelente usado (f):   40.57 kg
+  Tiempo hasta mínimo (t):    135.65 s
+
+✅ SCORE KSPDG: 52.88
+
+MISION 12
+
+((1.00, 0.00, 0.00), 15),
+  ((0.00, 1.00, 0.00), 16),
+  ((0.00, 0.00, 0.00), DURATION - 28) 
+  
+  📊 Resultados:
+  Distancia mínima (d):       61.97 m
+  Velocidad relativa (v):     18.23 m/s
+  Monopropelente usado (f):   17.70 kg
+  Tiempo hasta mínimo (t):    139.09 s
+
+✅ SCORE KSPDG: 69.35
